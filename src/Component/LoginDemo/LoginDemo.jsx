@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 
-const Signup=()=> {
+const Login=({ onLogin })=> {
   const [formData, setFormData] = useState({
     username: '',
-    email: '',
     password: '',
   });
 
@@ -15,16 +14,21 @@ const Signup=()=> {
     });
   };
 
-  const handleSignup = () => {
+  const handleLogin = () => {
     const users = JSON.parse(localStorage.getItem('users')) || [];
-    users.push(formData);
-    localStorage.setItem('users', JSON.stringify(users));
-    alert('User registered successfully');
+    const user = users.find((u) => u.username === formData.username && u.password === formData.password);
+
+    if (user) {
+      onLogin(user);
+      alert('Login successful');
+    } else {
+      alert('Invalid username or password');
+    }
   };
 
   return (
     <div>
-      <h2>Signup</h2>
+      <h2>Login</h2>
       <form>
         <div>
           <label htmlFor="username">Username</label>
@@ -34,18 +38,6 @@ const Signup=()=> {
             name="username"
             value={formData.username}
             onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
           />
         </div>
         <div>
@@ -56,15 +48,14 @@ const Signup=()=> {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            required
           />
         </div>
-        <button type="button" onClick={handleSignup}>
-          Sign Up
+        <button type="button" onClick={handleLogin}>
+          Login
         </button>
       </form>
     </div>
   );
 }
 
-export default Signup;
+export default Login;
